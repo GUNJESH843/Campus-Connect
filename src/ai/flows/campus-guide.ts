@@ -23,8 +23,8 @@ const CampusLocationSchema = z.object({
   hours: z.string(),
   details: z.string(),
   coordinates: z.object({
-    x: z.number().describe('The x-coordinate percentage for the map pin.'),
-    y: z.number().describe('The y-coordinate percentage for the map pin.'),
+    lat: z.number().describe('The latitude for the map pin.'),
+    lng: z.number().describe('The longitude for the map pin.'),
   }),
 });
 
@@ -36,7 +36,7 @@ export type CampusGuideInput = z.infer<typeof CampusGuideInputSchema>;
 const CampusGuideOutputSchema = z.object({
   response: z.string().describe("The AI guide's answer to the user query."),
   location: CampusLocationSchema.optional().describe(
-    "The location identified, if any, with its name and coordinates for map pinning."
+    'The location identified, if any, with its name and coordinates for map pinning.'
   ),
 });
 export type CampusGuideOutput = z.infer<typeof CampusGuideOutputSchema>;

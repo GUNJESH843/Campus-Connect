@@ -92,7 +92,7 @@ export interface CampusLocation {
   type: 'Library' | 'Dining' | 'Recreation' | 'Academic' | 'Student Services';
   hours: string;
   details: string;
-  coordinates: { x: number; y: number };
+  coordinates: { lat: number; lng: number };
 }
 
 export const campusLocations: CampusLocation[] = [
@@ -101,35 +101,35 @@ export const campusLocations: CampusLocation[] = [
     type: 'Library',
     hours: '8 AM - 2 AM',
     details: 'The largest library on campus with quiet zones, group study rooms, and a coffee shop.',
-    coordinates: { x: 25, y: 30 },
+    coordinates: { lat: 37.4275, lng: -122.1697 },
   },
   {
     name: 'Student Union',
     type: 'Student Services',
     hours: '7 AM - 11 PM',
     details: 'Hub for student life, containing the main cafeteria, campus store, and various club offices.',
-    coordinates: { x: 50, y: 45 },
+    coordinates: { lat: 37.4285, lng: -122.1707 },
   },
   {
     name: 'Tech Building',
     type: 'Academic',
     hours: 'Open 24/7 for students in the program',
     details: 'Home to the Computer Science and Engineering departments. Contains several computer labs.',
-    coordinates: { x: 75, y: 25 },
+    coordinates: { lat: 37.4265, lng: -122.1687 },
   },
   {
     name: 'Recreation Center',
     type: 'Recreation',
     hours: '6 AM - 10 PM',
     details: 'A fully-equipped gym with a swimming pool, basketball courts, and a rock climbing wall.',
-    coordinates: { x: 40, y: 75 },
+    coordinates: { lat: 37.4295, lng: -122.1677 },
   },
   {
     name: 'Fine Arts Building',
     type: 'Academic',
     hours: '9 AM - 9 PM',
     details: 'Contains art studios, galleries, and a theatre for student productions.',
-    coordinates: { x: 65, y: 60 },
+    coordinates: { lat: 37.427, lng: -122.172 },
   },
 ];
 
