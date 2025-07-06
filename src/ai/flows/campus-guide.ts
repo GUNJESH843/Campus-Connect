@@ -8,8 +8,25 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { campusLocations } from '@/lib/data';
+import { campusLocations, type CampusLocation } from '@/lib/data';
 import { z } from 'genkit';
+
+const CampusLocationSchema = z.object({
+  name: z.string(),
+  type: z.enum([
+    'Library',
+    'Dining',
+    'Recreation',
+    'Academic',
+    'Student Services',
+  ]),
+  hours: z.string(),
+  details: z.string(),
+  coordinates: z.object({
+    x: z.number().describe('The x-coordinate percentage for the map pin.'),
+    y: z.number().describe('The y-coordinate percentage for the map pin.'),
+  }),
+});
 
 const CampusGuideInputSchema = z.object({
   query: z.string().describe('The user question about a campus location.'),
@@ -17,7 +34,10 @@ const CampusGuideInputSchema = z.object({
 export type CampusGuideInput = z.infer<typeof CampusGuideInputSchema>;
 
 const CampusGuideOutputSchema = z.object({
-  response: z.string().describe('The AI guide\'s answer to the user query.'),
+  response: z.string().describe("The AI guide's answer to the user query."),
+  location: CampusLocationSchema.optional().describe(
+    "The location identified, if any, with its name and coordinates for map pinning."
+  ),
 });
 export type CampusGuideOutput = z.infer<typeof CampusGuideOutputSchema>;
 
@@ -25,7 +45,7 @@ const getLocationInfo = ai.defineTool(
   {
     name: 'getLocationInfo',
     description:
-      'Get information about a specific location on campus, like its hours or purpose.',
+      'Get information about a specific location on campus, like its hours, purpose, and map coordinates.',
     inputSchema: z.object({
       locationName: z
         .string()
@@ -33,20 +53,20 @@ const getLocationInfo = ai.defineTool(
           'The name of the location to get information for. e.g. "Main Library", "Student Union"'
         ),
     }),
-    outputSchema: z.string(),
+    outputSchema: CampusLocationSchema,
   },
-  async (input) => {
+  async (input): Promise<CampusLocation | undefined> => {
     const location = campusLocations.find(
       (loc) => loc.name.toLowerCase() === input.locationName.toLowerCase()
     );
-    if (location) {
-      return JSON.stringify(location);
-    }
-    return `Information for "${input.locationName}" could not be found. Available locations are: ${campusLocations.map((l) => l.name).join(', ')}`;
+    // The LLM will interpret a return of undefined as the tool failing to find the location.
+    return location;
   }
 );
 
-export async function askCampusGuide(input: CampusGuideInput): Promise<CampusGuideOutput> {
+export async function askCampusGuide(
+  input: CampusGuideInput
+): Promise<CampusGuideOutput> {
   return campusGuideFlow(input);
 }
 
@@ -57,8 +77,9 @@ const prompt = ai.definePrompt({
   tools: [getLocationInfo],
   prompt: `You are a friendly and helpful campus tour guide AI.
   A student is asking a question about the campus.
-  Use the available tools to answer their question.
-  If you don't know the answer, say that you don't have that information.
+  Use the available tools to find the location and answer their question.
+  If you don't know the answer or can't find the location, say that you don't have that information.
+  If you use the getLocationInfo tool and find a location, you MUST populate the 'location' field in the output with all the information for that location from the tool.
 
   Question: {{{query}}}`,
 });

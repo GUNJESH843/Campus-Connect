@@ -5,9 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Image from 'next/image';
 
-import { askCampusGuide } from '@/ai/flows/campus-guide';
+import { askCampusGuide, type CampusGuideOutput } from '@/ai/flows/campus-guide';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,11 +15,11 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage,
 } from '@/components/ui/form';
-import { Bot, Loader2, SendHorizonal, User } from 'lucide-react';
+import { Bot, Loader2, SendHorizonal, User, MapPin } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Avatar, AvatarFallback } from './ui/avatar';
+import type { CampusLocation } from '@/lib/data';
 
 const formSchema = z.object({
   query: z.string().min(1, 'Please enter a question.'),
@@ -32,6 +32,7 @@ interface ChatMessage {
 
 export default function CampusMapInteractive() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [pin, setPin] = useState<CampusLocation | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -53,6 +54,13 @@ export default function CampusMapInteractive() {
         content: result.response,
       };
       setMessages((prev) => [...prev, assistantMessage]);
+
+      if (result.location) {
+        setPin(result.location);
+      } else {
+        setPin(null);
+      }
+
     } catch (e) {
       toast({
         variant: 'destructive',
@@ -81,8 +89,27 @@ export default function CampusMapInteractive() {
               alt="Campus Map"
               layout="fill"
               objectFit="cover"
-              data-ai-hint="campus map"
+              data-ai-hint="abstract map"
             />
+            {pin && (
+              <div
+                key={pin.name}
+                className="absolute animate-in fade-in zoom-in-75 duration-500"
+                style={{
+                  top: `${pin.coordinates.y}%`,
+                  left: `${pin.coordinates.x}%`,
+                }}
+              >
+                <div className="relative -translate-x-1/2 -translate-y-full">
+                  <MapPin className="h-10 w-10 text-destructive drop-shadow-lg animate-bounce" />
+                  <div className="absolute bottom-full mb-2 w-max -translate-x-1/2 left-1/2">
+                      <Card className="p-2 bg-background/80 backdrop-blur-sm">
+                          <p className="font-semibold text-sm">{pin.name}</p>
+                      </Card>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -108,7 +135,7 @@ export default function CampusMapInteractive() {
                     </Avatar>
                   )}
                   <div
-                    className={`rounded-lg px-4 py-2 text-sm max-w-[80%] ${
+                    className={`rounded-lg px-4 py-2 text-sm max-w-[80%] whitespace-pre-wrap ${
                       message.role === 'user'
                         ? 'bg-primary text-primary-foreground'
                         : 'bg-muted'
