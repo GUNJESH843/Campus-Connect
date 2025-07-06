@@ -45,6 +45,13 @@ export default function AITutor() {
   const { toast } = useToast();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      query: '',
+    },
+  });
+
   useEffect(() => {
     if (scrollAreaRef.current) {
         // A bit of a hack to scroll to the bottom.
