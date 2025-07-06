@@ -1,25 +1,27 @@
-import AnnouncementsFeed from "@/components/announcements-feed";
-import EventCalendar from "@/components/event-calendar";
-import Header from "@/components/layout/header";
-import PersonalizedRecommendations from "@/components/personalized-recommendations";
-import { Toaster } from "@/components/ui/toaster";
+import AnnouncementsFeed from '@/components/announcements-feed';
+import EventCalendar from '@/components/event-calendar';
+import PageHeader from '@/components/layout/page-header';
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-background font-body">
-      <Header />
-      <main className="flex-1 w-full max-w-screen-xl px-4 py-8 mx-auto md:px-6 md:py-12">
+    <>
+      <PageHeader
+        title="Dashboard"
+        description="Welcome back, Alex. Here's what's happening on campus."
+      />
+      <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
         <div className="grid gap-8 lg:grid-cols-3 lg:gap-12">
-          <div className="lg:col-span-2">
-            <PersonalizedRecommendations />
+          <div className="lg:col-span-2 space-y-8">
+            <h2 className="text-2xl font-bold tracking-tight">
+              Announcements & Events
+            </h2>
+            <AnnouncementsFeed />
           </div>
           <div className="space-y-8">
-            <AnnouncementsFeed />
             <EventCalendar />
           </div>
         </div>
       </main>
-      <Toaster />
-    </div>
+    </>
   );
 }
