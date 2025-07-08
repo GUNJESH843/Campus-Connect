@@ -5,7 +5,7 @@
  *
  * See: https://firebase.google.com/docs/genkit/nextjs-api-routes
  */
-import { createAppHostingEndpoints } from '@genkit-ai/next';
+import { createGenkitHandler } from '@genkit-ai/next/handler';
 import { ai } from '@/ai/genkit';
 
 // Make sure to import all the flows you want to expose.
@@ -16,6 +16,6 @@ import '@/ai/flows/summarize-course-reviews';
 import '@/ai/flows/wellness-coach-flow';
 import '@/ai/flows/text-to-speech-flow';
 
-export const { GET, POST } = createAppHostingEndpoints({
+export const { GET, POST } = createGenkitHandler({
   ai,
 });
