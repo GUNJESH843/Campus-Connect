@@ -4,6 +4,7 @@ import {
   BookOpen,
   BrainCircuit,
   GraduationCap,
+  HeartPulse,
   LayoutDashboard,
   MapPin,
   Users,
@@ -22,6 +23,7 @@ const links = [
   { href: '/map', label: 'Campus Map', icon: MapPin },
   { href: '/courses', label: 'Course Reviews', icon: BookOpen },
   { href: '/tutor', label: 'AI Tutor', icon: BrainCircuit },
+  { href: '/wellness', label: 'Wellness Coach', icon: HeartPulse },
 ];
 
 export default function AppSidebar() {

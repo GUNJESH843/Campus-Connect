@@ -13,6 +13,8 @@ import '@/ai/flows/ai-tutor-flow';
 import '@/ai/flows/campus-guide';
 import '@/ai/flows/find-study-buddy';
 import '@/ai/flows/summarize-course-reviews';
+import '@/ai/flows/wellness-coach-flow';
+import '@/ai/flows/text-to-speech-flow';
 
 export const { GET, POST } = createAppHostingEndpoints({
   ai,
