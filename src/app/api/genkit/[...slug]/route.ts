@@ -5,7 +5,7 @@
  *
  * See: https://firebase.google.com/docs/genkit/nextjs-api-routes
  */
-import { createGenkitHandler } from '@genkit-ai/next/handler';
+import { handler } from '@genkit-ai/next';
 import { ai } from '@/ai/genkit';
 
 // Make sure to import all the flows you want to expose.
